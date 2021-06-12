@@ -1,113 +1,148 @@
 import 'package:flutter/material.dart';
+import 'package:madlayoutassignmentpart1/components/my_flutter_app_icons.dart';
 
-void main() {
-  runApp(MyApp());
-}
+void main() => runApp(MyApp());
+
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+      title: 'My Home',
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('My home'),
+        ),
+        body: GridView.count(
+          // Create grid for the items
+          crossAxisCount: 2,
+          childAspectRatio: 1.5,
+          // list items
+          children: List.generate(Switches.length, (index) {
+            return Center(
+              child: SwitchCards(switchControl: Switches[index]),
+            );
+          }),
+        ),
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
+class SwitchControl {
   final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
+  final IconData switchOn;
+  final IconData switchOf;
+  final String room;
+  const SwitchControl({required this.title, required this.switchOn, required this.switchOf, required this.room});
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+const List<SwitchControl> Switches = const <SwitchControl>[
+  const SwitchControl(
+      title: 'PlugAmmar',
+      switchOn: MyFlutterApp.plug,
+      switchOf: MyFlutterApp.unplugged,
+      room: 'living room'),
+  const SwitchControl(
+      title: 'Bilik Hana',
+      switchOn: MyFlutterApp.window,
+      switchOf: MyFlutterApp.unplugged,
+      room: 'living room'),
+  const SwitchControl(
+      title: 'Gate Light Switch',
+      switchOn: MyFlutterApp.lamp,
+      switchOf: MyFlutterApp.unplugged,
+      room: 'living room'),
+  const SwitchControl(
+      title: 'Plug 3 Patio',
+      switchOn: MyFlutterApp.plug,
+      switchOf: MyFlutterApp.unplugged,
+      room: 'kitchen'),
+  const SwitchControl(
+      title: 'Parking Lights',
+      switchOn: MyFlutterApp.lamp,
+      switchOf: MyFlutterApp.unplugged,
+      room: 'bedroom'),
+  const SwitchControl(
+      title: 'Bridge',
+      switchOn: MyFlutterApp.publish,
+      switchOf: MyFlutterApp.unplugged,
+      room: 'bedroom')
+];
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+//statefulWidget
+class SwitchCards extends StatefulWidget {
+const SwitchCards({Key? key, required this.switchControl}) : super(key: key);
+final  SwitchControl  switchControl;
+
+  @override
+  _SwitchCardsState createState() => _SwitchCardsState();
+}
+
+//state
+class _SwitchCardsState extends State<SwitchCards> {
+  var currentIcon;
+  var switchIcon = Icon(Icons.power_off_outlined);
+  bool isSwitched = false;
+  var powerState = "OFF";
+  Color stateColor = Colors.red;
+
+  @override
+  void initState() {
+    super.initState();
+    currentIcon = widget.switchControl.switchOf;
+  }
+
+  void toggleSwitch() {
+    if (isSwitched == false) {
+      setState(() {
+        switchIcon = Icon(Icons.power_settings_new_outlined);
+        currentIcon = widget.switchControl.switchOn;
+        powerState = "ON";
+        isSwitched = true;
+        stateColor = Colors.green;
+      });
+    } else {
+      setState(() {
+        switchIcon = Icon(Icons.power_off_outlined);
+        currentIcon = widget.switchControl.switchOf;
+        powerState = "OFF";
+        isSwitched = false;
+        stateColor = Colors.red;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    return Card(
+      child: Padding(
+          padding: EdgeInsets.all(10.0),
+          child: Row(children: <Widget>[
+            Expanded(
+                flex: 6,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Icon(currentIcon, size: 30),
+                    Text(widget.switchControl.title, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                    // Text(widget.switchControl.room, style: TextStyle(fontSize: 15, color: Colors.black54)),
+                    Expanded(
+                        child: Container(
+                            alignment: Alignment.bottomLeft,
+                            child: Text(powerState,
+                                style: TextStyle(fontWeight: FontWeight.bold, color: stateColor))))
+                  ],
+                )),
+            Expanded(
+                flex: 4,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      IconButton(icon: switchIcon, onPressed: toggleSwitch)
+                    ])),
+            //Spacer(),
+          ])),
     );
   }
 }
